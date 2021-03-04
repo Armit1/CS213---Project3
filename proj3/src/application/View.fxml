@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 
-
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
-    <children>
-        <Label fx:id="label" text="Label" />
-    </children>
-</StackPane>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+   <center>
+      <AnchorPane prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+         <children>
+            <ChoiceBox fx:id="employeeTypeSelect" layoutX="25.0" layoutY="64.0" prefWidth="150.0" />
+            <DatePicker fx:id="dateSelector" layoutX="13.0" layoutY="14.0" />
+            <RadioButton fx:id="eceButton" alignment="TOP_CENTER" layoutX="79.0" layoutY="113.0" mnemonicParsing="false" text="ECE" />
+            <RadioButton fx:id="itButton" alignment="TOP_CENTER" layoutX="79.0" layoutY="138.0" mnemonicParsing="false" text="IT" />
+            <RadioButton fx:id="csButton" alignment="TOP_CENTER" layoutX="79.0" layoutY="163.0" mnemonicParsing="false" text="CS" />
+         </children>
+      </AnchorPane>
+   </center>
+   <left>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="59.0" layoutY="67.0" text="Employee Type" />
+            <Label layoutX="71.0" layoutY="21.0" text="Date Hired" />
+            <Label layoutX="67.0" layoutY="121.0" text="Department" />
+         </children></AnchorPane>
+   </left>
+   <bottom>
+      <TextArea fx:id="consoleOutputArea" prefHeight="141.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+   </bottom>
+</BorderPane>
