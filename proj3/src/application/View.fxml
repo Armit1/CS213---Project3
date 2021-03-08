@@ -13,7 +13,12 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <center>
-      <AnchorPane prefHeight="800.0" prefWidth="800.0" BorderPane.alignment="CENTER" />
+      <AnchorPane prefHeight="800.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="printEarnings" layoutX="95.0" layoutY="86.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="175.0" text="Print earning statements" />
+            <Button fx:id="printByDate" layoutX="95.0" layoutY="166.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="171.0" text="Print earnings by date hired" />
+            <Button fx:id="printByDept" layoutX="95.0" layoutY="246.0" mnemonicParsing="false" text="Print Earnings by department" />
+         </children></AnchorPane>
    </center>
    <left>
       <AnchorPane prefHeight="458.0" prefWidth="614.0" BorderPane.alignment="CENTER">
@@ -25,12 +30,12 @@
             <RadioButton fx:id="eceButton" alignment="TOP_CENTER" layoutX="227.0" layoutY="121.0" mnemonicParsing="false" text="ECE" />
             <RadioButton fx:id="itButton" alignment="TOP_CENTER" layoutX="227.0" layoutY="146.0" mnemonicParsing="false" text="IT" />
             <RadioButton fx:id="csButton" alignment="TOP_CENTER" layoutX="227.0" layoutY="171.0" mnemonicParsing="false" text="CS" />
-            <DatePicker fx:id="dateSelector" layoutX="171.0" layoutY="17.0" />
-            <TextField layoutX="174.0" layoutY="215.0" prefHeight="26.0" prefWidth="170.0" />
+            <DatePicker fx:id="datepicker" layoutX="171.0" layoutY="17.0" />
+            <TextField fx:id="payEntry" layoutX="174.0" layoutY="215.0" prefHeight="26.0" prefWidth="170.0" />
             <Label fx:id="employeePayType" layoutX="71.0" layoutY="219.0" text="Annual Salary :" />
-            <Button layoutX="148.0" layoutY="316.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="59.0" text="Add" />
-            <Button layoutX="228.0" layoutY="316.0" mnemonicParsing="false" text="Remove" />
-            <Button layoutX="308.0" layoutY="316.0" mnemonicParsing="false" text="Update" />
+            <Button fx:id="addAction" layoutX="148.0" layoutY="316.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="59.0" text="Add" />
+            <Button fx:id="removeAction" layoutX="228.0" layoutY="316.0" mnemonicParsing="false" text="Remove" />
+            <Button fx:id="updateAction" layoutX="308.0" layoutY="316.0" mnemonicParsing="false" text="Update" />
             <RadioButton fx:id="managerSelect" layoutX="438.0" layoutY="67.0" mnemonicParsing="false" text="Manager" />
             <RadioButton fx:id="departmentHeadSelect" layoutX="438.0" layoutY="117.0" mnemonicParsing="false" text="Department Head" />
             <RadioButton fx:id="directorSelect" layoutX="438.0" layoutY="167.0" mnemonicParsing="false" text="Director" />

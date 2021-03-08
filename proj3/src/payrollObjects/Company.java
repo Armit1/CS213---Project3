@@ -128,13 +128,13 @@ public class Company {
     Prints the original list of employees in the company. If there are no employees
     present in the list it will output a warning.
     */
-    public void print() { // print earning statements for all employees
+    public String print() { // print earning statements for all employees
         if (numEmployee == 0) {
-            System.out.println("Employee database is empty.");
-            return;
+            
+            return "Employee database is empty.";
         }
-        System.out.println("--Printing earning statements for all employees--");
-        printList();
+        
+        return "--Printing earning statements for all employees--\r\n" + printList();
     }
 
     /**
@@ -143,10 +143,9 @@ public class Company {
     the console. The list is sorted in-memory. If there are no employees present in the 
     list it will not sort and instead it will output a warning.
     */
-    public void printByDepartment() { // print earning statements by department
-        if (numEmployee == 0) {
-            System.out.println("Employee database is empty.");
-            return;
+    public String printByDepartment() { // print earning statements by department
+        if (numEmployee == 0) {         
+            return "Employee database is empty.";
         }
         final int GREATER = 1;
         for (int i = 0; i < numEmployee; i++) {
@@ -161,8 +160,7 @@ public class Company {
                 }
             }
         }
-        System.out.println("--Printing earning statements by department--");
-        printList();
+        return "--Printing earning statements by department--\r\n" + printList();
     }
 
     /**
@@ -171,10 +169,10 @@ public class Company {
     the console. The list is sorted in-memory. If there are no employees present in the 
     list it will not sort and instead it will output a warning.
     */
-    public void printByDate() { // print earning statements by date hired
+    public String printByDate() { // print earning statements by date hired
         if (numEmployee == 0) {
-            System.out.println("Employee database is empty.");
-            return;
+            
+            return "Employee database is empty.";
         }
         final int GREATER = 1;
         for (int i = 0; i < numEmployee; i++) {
@@ -191,17 +189,20 @@ public class Company {
                 }
             }
         }
-        System.out.println("--Printing earning statements by date hired--");
-        printList();
+       
+        return "--Printing earning statements by date hired--\r\n" + printList();
     }
 
     /**
     Helper function that prints the current list of company employees that are stored in-memory 
     of the Company object. 
     */
-    private void printList() {
+    private String printList() {
+    	String output = "";
         for (int i = 0; i < numEmployee; i++)
-            System.out.println(emplist[i].toString());
+            output += emplist[i].toString() + "\r\n";
+        
+        return output;
     }
     
     /**
