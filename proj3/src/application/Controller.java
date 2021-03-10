@@ -5,21 +5,14 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import javax.swing.JSpinner.DateEditor;
-
 import payrollObjects.Date;
 import payrollObjects.Employee;
 import payrollObjects.Fulltime;
 import payrollObjects.Management;
 import payrollObjects.Parttime;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -28,75 +21,50 @@ import payrollObjects.*;
 public class Controller {
 
 	@FXML
-    private TextArea consoleOutputArea;
-
-    @FXML
-    private TextField nameField;
-
-    @FXML
-    private DatePicker datePicker;
-
-    @FXML
-    private ToggleGroup empTypeGroup;
-
-    @FXML
-    private RadioButton eceButton;
-
-    @FXML
-    private ToggleGroup departmentGroup;
-
-    @FXML
-    private RadioButton csButton;
-
-    @FXML
-    private RadioButton itButton;
-
-    @FXML
-    private TextField salaryField;
-
-    @FXML
-    private TextField rateField;
-
-    @FXML
-    private TextField hoursField;
-
-    @FXML
-    private RadioButton managerSelect;
-
-    @FXML
-    private ToggleGroup manageGroup;
-
-    @FXML
-    private RadioButton departmentHeadSelect;
-
-    @FXML
-    private RadioButton directorSelect;
-
-    @FXML
-    private Button printByDept;
-
-    @FXML
-    private Button printByDate;
-
-    @FXML
-    private Button printEarnings;
-
-    @FXML
-    private Button updateAction;
-    
-    @FXML 
-    private Button setHoursBTN;
-    @FXML 
-    private Label rateLabel;
-    @FXML 
-    private Label hoursLabel;
-    @FXML
-    private Label salaryLabel;
+	private TextArea consoleOutputArea;
+	@FXML
+	private TextField nameField;
+	@FXML
+	private DatePicker datePicker;
+	@FXML
+	private ToggleGroup empTypeGroup;
+	@FXML
+	private ToggleGroup departmentGroup;
+	@FXML
+	private TextField salaryField;
+	@FXML
+	private TextField rateField;
+	@FXML
+	private TextField hoursField;
+	@FXML
+	private RadioButton managerSelect;
+	@FXML
+	private ToggleGroup manageGroup;
+	@FXML
+	private RadioButton departmentHeadSelect;
+	@FXML
+	private RadioButton directorSelect;
+	@FXML
+	private Button printByDept;
+	@FXML
+	private Button printByDate;
+	@FXML
+	private Button printEarnings;
+	@FXML
+	private Button updateAction;
+	@FXML
+	private Button setHoursBTN;
+	@FXML
+	private Label rateLabel;
+	@FXML
+	private Label hoursLabel;
+	@FXML
+	private Label salaryLabel;
 
 	private static Company company = new Company();
 
 	@FXML
-    void addEmployee(ActionEvent event) {
+	void addEmployee(ActionEvent event) {
 		String name = nameField.getText();
 		if (name.isEmpty()) {
 			consoleOutputArea.appendText("Please enter a name.\n");
@@ -104,7 +72,7 @@ public class Controller {
 		}
 		RadioButton selectedDept = (RadioButton) departmentGroup.getSelectedToggle();
 		String department = selectedDept.getText();
-		Date dateHired; 
+		Date dateHired;
 		try {
 			LocalDate localDate = datePicker.getValue();
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -121,7 +89,8 @@ public class Controller {
 		RadioButton selectedEmployee = (RadioButton) empTypeGroup.getSelectedToggle();
 		String employeeType = selectedEmployee.getText();
 		employeeHelper(name, department, dateHired, employeeType);
-    }
+	}
+
 	private void employeeHelper(String name, String department, Date dateHired, String employeeType) {
 		switch (employeeType) {
 		case "Full Time":
@@ -205,24 +174,29 @@ public class Controller {
 		}
 		consoleOutputArea.appendText("Employee added.\n");
 	}
-    @FXML
-    void clearFields(ActionEvent event) {
 
-    }
+	@FXML
+	void clearFields(ActionEvent event) {
+		nameField.clear();
+		datePicker.getEditor().clear();
+		salaryField.clear();
+		rateField.clear();
+		hoursField.clear();
+	}
 
-    @FXML
-    void computePayments(ActionEvent event) {
-    	if (company.isEmpty())
+	@FXML
+	void computePayments(ActionEvent event) {
+		if (company.isEmpty())
 			consoleOutputArea.appendText("Employee database is empty.\n");
 		else {
 			company.processPayments();
 			consoleOutputArea.appendText("Payments calculated.\n");
 		}
-    }
+	}
 
-    @FXML
-    void exportFile(ActionEvent event) {
-    	FileChooser chooser = new FileChooser();
+	@FXML
+	void exportFile(ActionEvent event) {
+		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Open Target File for the Export");
 		chooser.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.txt"),
 				new ExtensionFilter("All Files", "*.*"));
@@ -235,11 +209,11 @@ public class Controller {
 		} catch (NullPointerException e) {
 			return;
 		}
-    }
+	}
 
-    @FXML
-    void importFile(ActionEvent event) throws FileNotFoundException {
-    	FileChooser chooser = new FileChooser();
+	@FXML
+	void importFile(ActionEvent event) throws FileNotFoundException {
+		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Open Source File for the Import");
 		chooser.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.txt"),
 				new ExtensionFilter("All Files", "*.*"));
@@ -276,41 +250,41 @@ public class Controller {
 			return;
 		}
 		consoleOutputArea.appendText("Database imported.\n");
-    }
+	}
 
-    @FXML
-    void printByDate(ActionEvent event) {
-    	String displayDB = company.printByDate();
+	@FXML
+	void printByDate(ActionEvent event) {
+		String displayDB = company.printByDate();
 		if (displayDB == null) {
 			consoleOutputArea.appendText("Employee database is empty.\n");
 			return;
 		}
 		consoleOutputArea.appendText("--Printing by date--\n" + displayDB);
-    }
+	}
 
-    @FXML
-    void printByDepartment(ActionEvent event) {
-    	String displayDB = company.printByDepartment();
+	@FXML
+	void printByDepartment(ActionEvent event) {
+		String displayDB = company.printByDepartment();
 		if (displayDB == null) {
 			consoleOutputArea.appendText("Employee database is empty.\n");
 			return;
 		}
 		consoleOutputArea.appendText("--Printing by department--\n" + displayDB);
-    }
+	}
 
-    @FXML
-    void printEmployees(ActionEvent event) {
-    	String displayDB = company.print();
+	@FXML
+	void printEmployees(ActionEvent event) {
+		String displayDB = company.print();
 		if (displayDB == null) {
 			consoleOutputArea.appendText("Employee database is empty.\n");
 			return;
 		}
 		consoleOutputArea.appendText("--Printing all employees--\n" + displayDB);
-    }
+	}
 
-    @FXML
-    void removeEmployee(ActionEvent event) {
-    	String name = nameField.getText();
+	@FXML
+	void removeEmployee(ActionEvent event) {
+		String name = nameField.getText();
 		if (name.isEmpty()) {
 			consoleOutputArea.appendText("Please enter a name.\n");
 			return;
@@ -335,11 +309,11 @@ public class Controller {
 			consoleOutputArea.appendText("Employee removed.\n");
 		else
 			consoleOutputArea.appendText("Employee could not be found.\n");
-    }
+	}
 
-    @FXML
-    void setHours(ActionEvent event) {
-    	final int MIN_HOURS = 0, MAX_HOURS = 100;
+	@FXML
+	void setHours(ActionEvent event) {
+		final int MIN_HOURS = 0, MAX_HOURS = 100;
 		String name = nameField.getText();
 		if (name.isEmpty()) {
 			consoleOutputArea.appendText("Please enter a name.\n");
@@ -380,9 +354,9 @@ public class Controller {
 		} catch (NumberFormatException e) {
 			consoleOutputArea.appendText("Please enter valid hours.\n");
 		}
-    }
-    
-    @FXML
+	}
+
+	@FXML
 	void selectFullRB(ActionEvent event) {
 		hoursField.setDisable(true);
 		hoursLabel.setDisable(true);
