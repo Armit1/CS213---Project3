@@ -2,6 +2,8 @@
 package application;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import javax.swing.JSpinner.DateEditor;
@@ -18,396 +20,407 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.TextFlow;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 import payrollObjects.*;
 
-public class Controller implements EventHandler<ActionEvent> {
+public class Controller {
 
-	private ObservableList<String> employeeTypeList = FXCollections.observableArrayList("Fulltime", "Parttime",
-			"Management");
 	@FXML
-	private ChoiceBox<String> employeeTypeSelect;
-	@FXML
-	private RadioButton csButton;
-	@FXML
-	private RadioButton itButton;
-	@FXML
-	private RadioButton eceButton;
-	@FXML
-	private RadioButton managerSelect;
-	@FXML
-	private RadioButton departmentHeadSelect;
-	@FXML
-	private RadioButton directorSelect;
-	@FXML
-	private Label employeePayType;
-	@FXML
-	private DatePicker datepicker;
-	@FXML
-	private Button printEarnings;
-	@FXML
-	private Button printByDate;
-	@FXML
-	private Button printByDept;
-	@FXML
-	private Button addAction;
-	@FXML
-	private Button removeAction;
-	@FXML
-	private Button updateAction;
-	@FXML
-	private TextArea consoleOutputArea;
+    private TextArea consoleOutputArea;
+
+    @FXML
+    private TextField nameField;
+
+    @FXML
+    private DatePicker datePicker;
+
+    @FXML
+    private ToggleGroup employeeTypeSelect;
+
+    @FXML
+    private RadioButton eceButton;
+
+    @FXML
+    private ToggleGroup departmentGroup;
+
+    @FXML
+    private RadioButton csButton;
+
+    @FXML
+    private RadioButton itButton;
+
+    @FXML
+    private TextField salaryField;
+
+    @FXML
+    private TextField rateField;
+
+    @FXML
+    private TextField hoursField;
+
+    @FXML
+    private RadioButton managerSelect;
+
+    @FXML
+    private ToggleGroup manageGroup;
+
+    @FXML
+    private RadioButton departmentHeadSelect;
+
+    @FXML
+    private RadioButton directorSelect;
+
+    @FXML
+    private Button printByDept;
+
+    @FXML
+    private Button printByDate;
+
+    @FXML
+    private Button printEarnings;
+
+    @FXML
+    private Button updateAction;
+    
+    @FXML 
+    private Button setHoursBTN;
+    @FXML 
+    private Label rateLabel;
+    @FXML 
+    private Label hoursLabel;
+    @FXML
+    private Label salaryLabel;
 
 	private static Company company = new Company();
-	private static final int FIRST_ARG = 1;
-	private static final int SECOND_ARG = 2;
-	private static final int THIRD_ARG = 3;
-	private static final int FOURTH_ARG = 4;
-	private static final int FIFTH_ARG = 5;
 
-	public void initialize() {
+	@FXML
+    void addEmployee(ActionEvent event) {
+		String name = nameField.getText();
+		if (name.isEmpty()) {
+			consoleOutputArea.appendText("Please enter a name.\n");
+			return;
+		}
+		RadioButton selectedDept = (RadioButton) departmentGroup.getSelectedToggle();
+		String department = selectedDept.getText();
+		Date dateHired; 
+		try {
+			LocalDate localDate = datePicker.getValue();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+			String dateString = localDate.format(formatter);
+			dateHired = new Date(dateString);
+			if (!dateHired.isValid()) {
+				consoleOutputArea.appendText("Please select a valid date.\n");
+				return;
+			}
+		} catch (NullPointerException e) {
+			consoleOutputArea.appendText("Please choose a date.\n");
+			return;
+		}
+		RadioButton selectedEmployee = (RadioButton) employeeTypeSelect.getSelectedToggle();
+		String employeeType = selectedEmployee.getText();
+		employeeHelper(name, department, dateHired, employeeType);
+    }
+	private void employeeHelper(String name, String department, Date dateHired, String employeeType) {
+		switch (employeeType) {
+		case "Full Time":
+			try {
+				String salaryString = salaryField.getText();
+				if (salaryString.isEmpty()) {
+					consoleOutputArea.appendText("Please provide a salary.\n");
+					return;
+				}
+				double annualSalary = Double.parseDouble(salaryString);
+				Fulltime newFullTime = new Fulltime(name, department, dateHired, annualSalary);
+				if (annualSalary < 0) { // validate salary
+					consoleOutputArea.appendText("Salary cannot be negative.\n");
+					return;
+				}
+				if (!company.add(newFullTime)) { // check if employee exists
+					consoleOutputArea.appendText("Employee is already in the list.\n");
+					return;
+				}
+				company.add(newFullTime);
+			} catch (NumberFormatException e) {
+				consoleOutputArea.appendText("Invalid salary format.\n");
+				return;
+			}
+			break;
+		case "Part Time":
+			double hourlyRate;
+			try {
+				String rateString = rateField.getText();
+				if (rateString.isEmpty()) {
+					consoleOutputArea.appendText("Please enter a hourly rate.\n");
+					return;
+				}
+				hourlyRate = Double.parseDouble(rateString);
+				Parttime newPartTime = new Parttime(name, department, dateHired, hourlyRate);
+				if (hourlyRate < 0) { // validate pay rate
+					consoleOutputArea.appendText("Pay rate cannot be negative.\n");
+					return;
+				}
+				if (!company.add(newPartTime)) { // check if employee exists
+					consoleOutputArea.appendText("Employee is already in the list.\n");
+					return;
+				}
+				company.add(newPartTime);
+			} catch (NumberFormatException e) {
+				consoleOutputArea.appendText("Invalid hours format.\n");
+				return;
+			}
+			break;
+		case "Management":
+			try {
+				final int MAN_ID = 1, DEP_HEAD_ID = 2, DIR_ID = 3;
+				if (salaryField.getText().isEmpty()) {
+					consoleOutputArea.appendText("Please provide a salary.\n");
+					return;
+				}
+				double annualSalary = Double.parseDouble(salaryField.getText());
+				RadioButton selectedRole = (RadioButton) manageGroup.getSelectedToggle();
+				int manageRole;
+				if (selectedRole.getText().equals("Manager"))
+					manageRole = MAN_ID;
+				else if (selectedRole.getText().equals("Department Head"))
+					manageRole = DEP_HEAD_ID;
+				else
+					manageRole = DIR_ID;
+				Management newManagement = new Management(name, department, dateHired, annualSalary, manageRole);
+				if (annualSalary < 0) { // validate salary
+					consoleOutputArea.appendText("Salary cannot be negative.\n");
+					return;
+				}
+				if (!company.add(newManagement)) { // check if employee exists
+					consoleOutputArea.appendText("Employee is already in the list.\n");
+					return;
+				}
+				company.add(newManagement);
+			} catch (NumberFormatException e) {
+				consoleOutputArea.appendText("Invalid salary format.\n");
+				return;
+			}
+			break;
+		}
+		consoleOutputArea.appendText("Employee added.\n");
+	}
+    @FXML
+    void clearFields(ActionEvent event) {
 
-		String javaVersion = System.getProperty("java.version");
-		String javafxVersion = System.getProperty("javafx.version");
+    }
 
-		employeeTypeSelect.getItems().addAll(employeeTypeList);
-		employeeTypeSelect.setValue("Fulltime");
-		employeePayType.setText("Annual Salary : ");
+    @FXML
+    void computePayments(ActionEvent event) {
+    	if (company.isEmpty())
+			consoleOutputArea.appendText("Employee database is empty.\n");
+		else {
+			company.processPayments();
+			consoleOutputArea.appendText("Payments calculated.\n");
+		}
+    }
+
+    @FXML
+    void exportFile(ActionEvent event) {
+    	FileChooser chooser = new FileChooser();
+		chooser.setTitle("Open Target File for the Export");
+		chooser.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.txt"),
+				new ExtensionFilter("All Files", "*.*"));
+		Stage stage = new Stage();
+		File targetFile = chooser.showSaveDialog(stage); // get the reference of the target file
+		// write code to write to the file.
+		try {
+			company.exportDatabase(targetFile);
+			consoleOutputArea.appendText("Database exported.");
+		} catch (NullPointerException e) {
+			return;
+		}
+    }
+
+    @FXML
+    void importFile(ActionEvent event) throws FileNotFoundException {
+    	FileChooser chooser = new FileChooser();
+		chooser.setTitle("Open Source File for the Import");
+		chooser.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.txt"),
+				new ExtensionFilter("All Files", "*.*"));
+		Stage stage = new Stage();
+		File sourceFile = chooser.showOpenDialog(stage); // get the reference of the source file
+		// write code to read from the file.
+		try {
+			Scanner in = new Scanner(sourceFile);
+			while (in.hasNextLine()) {
+				String entry = in.nextLine();
+				String[] args = entry.split(",");
+				String employeeType = args[0];
+				String name = args[1];
+				String department = args[2];
+				Date dateHired = new Date(args[3]);
+				switch (employeeType) {
+				case "P":
+					double rate = Double.parseDouble(args[4]);
+					company.add(new Parttime(name, department, dateHired, rate));
+					break;
+				case "M":
+					double managerSalary = Double.parseDouble(args[4]);
+					int manageRole = Integer.parseInt(args[5]);
+					company.add(new Management(name, department, dateHired, managerSalary, manageRole));
+					break;
+				case "F":
+					double fullTimeSalary = Double.parseDouble(args[4]);
+					company.add(new Fulltime(name, department, dateHired, fullTimeSalary));
+					break;
+				}
+			}
+			in.close();
+		} catch (NullPointerException e) {
+			return;
+		}
+		consoleOutputArea.appendText("Database imported.\n");
+    }
+
+    @FXML
+    void printByDate(ActionEvent event) {
+    	String displayDB = company.printByDate();
+		if (displayDB == null) {
+			consoleOutputArea.appendText("Employee database is empty.\n");
+			return;
+		}
+		consoleOutputArea.appendText("--Printing by date--\n" + displayDB);
+    }
+
+    @FXML
+    void printByDepartment(ActionEvent event) {
+    	String displayDB = company.printByDepartment();
+		if (displayDB == null) {
+			consoleOutputArea.appendText("Employee database is empty.\n");
+			return;
+		}
+		consoleOutputArea.appendText("--Printing by department--\n" + displayDB);
+    }
+
+    @FXML
+    void printEmployees(ActionEvent event) {
+    	String displayDB = company.print();
+		if (displayDB == null) {
+			consoleOutputArea.appendText("Employee database is empty.\n");
+			return;
+		}
+		consoleOutputArea.appendText("--Printing all employees--\n" + displayDB);
+    }
+
+    @FXML
+    void removeEmployee(ActionEvent event) {
+    	String name = nameField.getText();
+		if (name.isEmpty()) {
+			consoleOutputArea.appendText("Please enter a name.\n");
+			return;
+		}
+		RadioButton selectedDept = (RadioButton) departmentGroup.getSelectedToggle();
+		String department = selectedDept.getText();
+		Date dateHired;
+		try {
+			LocalDate localDate = datePicker.getValue();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+			String dateString = localDate.format(formatter);
+			dateHired = new Date(dateString);
+			if (!dateHired.isValid()) {
+				consoleOutputArea.appendText("Please select a valid date.\n");
+				return;
+			}
+		} catch (java.lang.NullPointerException e) {
+			consoleOutputArea.appendText("Please select a date.\n");
+			return;
+		}
+		if (company.remove(new Employee(name, department, dateHired)))
+			consoleOutputArea.appendText("Employee removed.\n");
+		else
+			consoleOutputArea.appendText("Employee could not be found.\n");
+    }
+
+    @FXML
+    void setHours(ActionEvent event) {
+    	final int MIN_HOURS = 0, MAX_HOURS = 100;
+		String name = nameField.getText();
+		if (name.isEmpty()) {
+			consoleOutputArea.appendText("Please enter a name.\n");
+			return;
+		}
+		RadioButton selectedDept = (RadioButton) departmentGroup.getSelectedToggle();
+		String department = selectedDept.getText();
+		Date dateHired;
+		try {
+			LocalDate localDate = datePicker.getValue();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+			String dateString = localDate.format(formatter);
+			dateHired = new Date(dateString);
+			if (!dateHired.isValid()) {
+				consoleOutputArea.appendText("Please select a valid date.\n");
+				return;
+			}
+		} catch (java.lang.NullPointerException e) {
+			consoleOutputArea.appendText("Please select a date.\n");
+			return;
+		}
+		try {
+			int hours = Integer.parseInt(hoursField.getText());
+			if (hours < MIN_HOURS) {
+				consoleOutputArea.appendText("Hours cannot be negative.\n");
+				return;
+			}
+			if (hours > MAX_HOURS) { // validate hours
+				consoleOutputArea.appendText("Invalid Hours: over 100.\n");
+				return;
+			}
+			if (!company.setHours(new Parttime(name, department, dateHired, hours))) {
+				consoleOutputArea.appendText("Employee does not exist.\n");
+				return;
+			}
+			consoleOutputArea.appendText("Working hours set.\n");
+
+		} catch (NumberFormatException e) {
+			consoleOutputArea.appendText("Please enter valid hours.\n");
+		}
+    }
+    
+    @FXML
+	void selectFullRB(ActionEvent event) {
+		hoursField.setDisable(true);
+		hoursLabel.setDisable(true);
+		rateLabel.setDisable(true);
+		salaryLabel.setDisable(false);
+		rateField.setDisable(true);
 		managerSelect.setDisable(true);
 		departmentHeadSelect.setDisable(true);
 		directorSelect.setDisable(true);
-
-		company = genCompanyObject();
-		
-		setActions();
-	}
-	
-	private void setActions() {
-		employeeTypeSelect.setOnAction(this);
-		managerSelect.setOnAction(this);
-		departmentHeadSelect.setOnAction(this);
-		directorSelect.setOnAction(this);
-		printEarnings.setOnAction(this);
-		printByDate.setOnAction(this);
-		printByDept.setOnAction(this);
-		addAction.setOnAction(this);
-		removeAction.setOnAction(this);
-		updateAction.setOnAction(this);
-	}
-	
-	/**
-    Adds a part time employee to the company list. Checks if the pay rate
-    is not negative, if the department is valid, and if the date is 
-    valid. If the employee does not exist in the company they are added, otherwise
-    the employee will not be added to the list and a warning will display. 
-     
-    @param tokens the args for constructing a part time employee
-    */
-    private void addPartTime(String[] tokens) {
-        String name = tokens[1];
-        String department = tokens[2];
-        Date dateHired = new Date(tokens[3]);
-        double hourlyRate = Double.parseDouble(tokens[4]);
-        Parttime newPartTime = new Parttime(name, department, dateHired, hourlyRate);
-        boolean isDepartment = checkDepartment(department);
-        boolean isDateHired = newPartTime.getProfile().getDateHired().isValid();
-        if (hourlyRate < 0) { // validate pay rate
-            System.out.println("Pay rate cannot be negative.");
-            return;
-        }
-        if (!isDepartment) { // validate department
-            System.out.println("'" + department + "' is not a valid department code.");
-            return;
-        }
-        if (!isDateHired) { // validate date 
-            System.out.println(dateHired.toString() + " is not a valid date!");
-            return;
-        }
-        if (!company.add(newPartTime)) { // check if employee exists
-            System.out.println("Employee is already in the list.");
-            return;
-        }
-        System.out.println("Employee added.");
-    }
-
-    /**
-    Adds a fulltime employee to the company list. Checks if the salary
-    is not negative, if the department is valid, and if the date is 
-    valid. If the employee does not exist in the company they are added, otherwise
-    the employee will not be added to the list and a warning will display. 
-     
-    @param tokens the args for constructing a full time employee
-    */
-    private void addFullTime(String[] tokens) {
-        String name = tokens[FIRST_ARG];
-        String department = tokens[SECOND_ARG];
-        Date dateHired = new Date(tokens[THIRD_ARG]);
-        double annualSalary = Double.parseDouble(tokens[FOURTH_ARG]);
-        Fulltime newFullTime = new Fulltime(name, department, dateHired, annualSalary);
-        boolean isDepartment = checkDepartment(department);
-        boolean isDateHired = newFullTime.getProfile().getDateHired().isValid();
-        if (annualSalary < 0) { // validate salary
-            System.out.println("Salary cannot be negative.");
-            return;
-        }
-        if (!isDepartment) { // validate department
-            System.out.println("'" + department + "' is not a valid department code.");
-            return;
-        }
-        if (!isDateHired) { // validate date
-            System.out.println(dateHired.toString() + " is not a valid date!");
-            return;
-        }
-        if (!company.add(newFullTime)) { // check if employee exists
-            System.out.println("Employee is already in the list.");
-            return;
-        }
-        System.out.println("Employee added.");
-    }
-
-    /**
-    Adds a fulltime management employee to the company list. Checks if the manager role exists, 
-    if salary is not negative, if the department is valid, and if the date is 
-    valid. If the employee does not exist in the company they are added, otherwise
-    the employee will not be added to the list and a warning will display. 
-     
-    @param tokens the args for constructing a full time management employee
-    */
-    private void addManagement(String[] tokens) {
-        final int MANAGER = 1;
-        final int DEP_HEAD = 2;
-        final int DIRECTOR = 3;
-        String name = tokens[FIRST_ARG];
-        String department = tokens[SECOND_ARG];
-        Date dateHired = new Date(tokens[THIRD_ARG]);
-        double annualSalary = Double.parseDouble(tokens[FOURTH_ARG]);
-        int manageRole = Integer.parseInt(tokens[FIFTH_ARG]);
-        if (manageRole != MANAGER && manageRole != DEP_HEAD && manageRole != DIRECTOR) {
-            System.out.println("Invalid management code.");
-            return;
-        }
-        Management newManagement = new Management(name, department, dateHired, annualSalary, manageRole);
-        boolean isDepartment = checkDepartment(department);
-        boolean isDateHired = newManagement.getProfile().getDateHired().isValid();
-        if (annualSalary < 0) { // validate salary
-            System.out.println("Salary cannot be negative.");
-            return;
-        }
-        if (!isDepartment) { // validate department code
-            System.out.println("'" + department + "' is not a valid department code.");
-            return;
-        }
-        if (!isDateHired) { // validate date
-            System.out.println(dateHired.toString() + " is not a valid date!");
-            return;
-        }
-        if (!company.add(newManagement)) { // check if employee exists
-            System.out.println("Employee is already in the list.");
-            return;
-        }
-        System.out.println("Employee added.");
-    }
-
-    /**
-    Removes an employee from the company list. Checks if there are at least one
-    or more employees in the company before attempting to remove the employee. If the 
-    employee exists then the employee is removed, otherwise a message is displayed notifying
-    that the employee does not exist.
-     
-    @param tokens the name, department, and date of the employee to remove
-    */
-    private void removeEmployee(String[] tokens) {
-        if (company.isEmpty()) { // check for employees
-            System.out.println("Employee database  is empty.");
-            return;
-        }
-        String removeName = tokens[FIRST_ARG];
-        String removeDep = tokens[SECOND_ARG];
-        Date removeDate = new Date(tokens[THIRD_ARG]);
-        Employee removeEmp = new Employee(removeName, removeDep, removeDate);
-        if (!company.remove(removeEmp)) { // validate if employee exists
-            System.out.println("Employee does not exist.");
-            return;
-        } 
-        System.out.println("Employee removed.");
-    }
-
-    /**
-    Sets the hours for a part time employee in the company list. Checks if 
-    there are at least one or more employees in the company before attempting 
-    to set hours. Checks if the working hours are negative, if the working 
-    hours are over 100, and if the employee exists in the company list.
-     
-    @param tokens
-    */
-    private void setHours(String[] tokens) {
-        if (company.isEmpty()) { // check for employees
-            System.out.println("Employee database is empty.");
-            return;
-        }        
-        final int MIN_HOURS = 0;
-        final int MAX_HOURS = 100;
-        String name = tokens[FIRST_ARG];
-        String department = tokens[SECOND_ARG];
-        Date dateHired = new Date(tokens[THIRD_ARG]);
-        int hoursWorked = Integer.parseInt(tokens[FOURTH_ARG]);
-        Parttime hoursToSet = new Parttime(name, department, dateHired, hoursWorked);
-        
-        if (hoursWorked < MIN_HOURS) { // validate hours
-            System.out.println("Working hours cannot be negative.");
-            return;
-        } 
-        if (hoursWorked > MAX_HOURS) { // validate hours
-            System.out.println("Invalid Hours: over 100.");
-            return;
-        }
-        if (!company.setHours(hoursToSet)) { // check if employee exists
-            System.out.println("Employee does not exist.");
-            return;
-        }
-        System.out.println("Working hours set.");
-    }
-
-    /**
-    Proccesses the payments for all employees in the company list. Checks 
-    if there are at least one or more employees in the company before attempting
-    to process payments. 
-    */
-    private void calculatePayment() {
-        if (company.isEmpty()) { // check for employees
-            System.out.println("Employee database is empty.");
-            return;
-        }
-        company.processPayments();
-        System.out.println("Calculation of employee payments is done.");
-    }
-
-    /**
-    Checks if a department corresponds to at least one of the existing departments
-    "CS", "ECE", or "IT" in the company. Department comparisons are case sensitive.
-     
-    @param department the string of the department to check
-    @return true if the department exists in the company, false if the department
-    does not exist
-    */
-    private boolean checkDepartment(String department) {
-        switch (department) {
-        case "CS":
-            return true;
-        case "ECE":
-            return true;
-        case "IT":
-            return true;
-        default:
-            return false;
-        }
-    }
-
-	private Company genCompanyObject() {
-		File fileHolder = new File("C:/Users/armit/git/CS213---Project3/proj3/src/application/database.txt");
-		Scanner fileReader;
-		String[] tokens;
-		String command;
-		try {
-			fileReader = new Scanner(fileHolder);
-			while (fileReader.hasNext()) {
-				command = fileReader.nextLine();
-				System.out.println(command);
-				tokens = command.split(",");
-				switch(tokens[0]){
-				case "P":
-					addPartTime(tokens);
-					break;
-				case "F":
-					addFullTime(tokens);
-					break;
-				case "M":
-					addManagement(tokens);
-					break;
-				
-				}
-			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		return company;
+		salaryField.setDisable(false);
+		setHoursBTN.setDisable(true);
 	}
 
-	private void toggleManagementButtons(String selectedEmployeeType) {
-
-		switch (selectedEmployeeType) {
-
-		case "Management":
-			managerSelect.setDisable(false);
-			departmentHeadSelect.setDisable(false);
-			directorSelect.setDisable(false);
-			break;
-
-		default:
-			managerSelect.setDisable(true);
-			departmentHeadSelect.setDisable(true);
-			directorSelect.setDisable(true);
-
-			managerSelect.setSelected(false);
-			departmentHeadSelect.setSelected(false);
-			directorSelect.setSelected(false);
-			break;
-
-		}
+	@FXML
+	void selectManageRB(ActionEvent event) {
+		hoursField.setDisable(true);
+		rateField.setDisable(true);
+		managerSelect.setDisable(false);
+		departmentHeadSelect.setDisable(false);
+		directorSelect.setDisable(false);
+		salaryField.setDisable(false);
+		setHoursBTN.setDisable(true);
+		hoursLabel.setDisable(false);
+		rateLabel.setDisable(false);
+		salaryLabel.setDisable(true);
 	}
-	
-	private void printHandler(ActionEvent event) {
-		consoleOutputArea.setText("");
-		if(event.getSource() == printEarnings) {
-			consoleOutputArea.appendText(company.print());
-		}else if(event.getSource() == printByDate) {
-			consoleOutputArea.appendText(company.printByDate());
-		}else {
-			consoleOutputArea.appendText(company.printByDepartment());
-		}
-	}
-	
-	
 
-	@Override
-	public void handle(ActionEvent event) {
-		
-		if (event.getSource() == employeeTypeSelect) {
-			String selectedEmployeeType = employeeTypeSelect.getValue();
-			toggleManagementButtons(selectedEmployeeType);
-			consoleOutputArea.appendText(selectedEmployeeType + " employee selected\n");
-
-			if (selectedEmployeeType.equals("Fulltime") || selectedEmployeeType.equals("Management")) {
-				employeePayType.setText("Annual Salary :");
-			} else {
-				employeePayType.setText("Hourly Rate :");
-			}
-		}
-		
-		if (event.getSource() == managerSelect) {
-			if (managerSelect.isSelected()) {
-				departmentHeadSelect.setSelected(false);
-				directorSelect.setSelected(false);
-			}
-		}
-		
-		if (event.getSource() == departmentHeadSelect) {
-			if (departmentHeadSelect.isSelected()) {
-				managerSelect.setSelected(false);
-				directorSelect.setSelected(false);
-			}
-		}
-		
-		if (event.getSource() == directorSelect) {
-			if (directorSelect.isSelected()) {
-				departmentHeadSelect.setSelected(false);
-				managerSelect.setSelected(false);
-			}
-		}
-
-		if(event.getSource() == printEarnings || event.getSource() == printByDate || event.getSource() == printByDept) {
-			printHandler(event);
-		}
+	@FXML
+	void selectPartRB(ActionEvent event) {
+		hoursField.setDisable(false);
+		rateField.setDisable(false);
+		managerSelect.setDisable(true);
+		departmentHeadSelect.setDisable(true);
+		directorSelect.setDisable(true);
+		salaryField.setDisable(true);
+		setHoursBTN.setDisable(false);
+		hoursLabel.setDisable(false);
+		rateLabel.setDisable(false);
+		salaryLabel.setDisable(true);
 	}
 }
