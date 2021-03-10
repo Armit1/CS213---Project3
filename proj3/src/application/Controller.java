@@ -37,7 +37,7 @@ public class Controller {
     private DatePicker datePicker;
 
     @FXML
-    private ToggleGroup employeeTypeSelect;
+    private ToggleGroup empTypeGroup;
 
     @FXML
     private RadioButton eceButton;
@@ -118,7 +118,7 @@ public class Controller {
 			consoleOutputArea.appendText("Please choose a date.\n");
 			return;
 		}
-		RadioButton selectedEmployee = (RadioButton) employeeTypeSelect.getSelectedToggle();
+		RadioButton selectedEmployee = (RadioButton) empTypeGroup.getSelectedToggle();
 		String employeeType = selectedEmployee.getText();
 		employeeHelper(name, department, dateHired, employeeType);
     }
@@ -386,41 +386,41 @@ public class Controller {
 	void selectFullRB(ActionEvent event) {
 		hoursField.setDisable(true);
 		hoursLabel.setDisable(true);
-		rateLabel.setDisable(true);
-		salaryLabel.setDisable(false);
 		rateField.setDisable(true);
+		rateLabel.setDisable(true);
+		salaryField.setDisable(false);
+		salaryLabel.setDisable(false);
 		managerSelect.setDisable(true);
 		departmentHeadSelect.setDisable(true);
 		directorSelect.setDisable(true);
-		salaryField.setDisable(false);
 		setHoursBTN.setDisable(true);
 	}
 
 	@FXML
 	void selectManageRB(ActionEvent event) {
 		hoursField.setDisable(true);
+		hoursLabel.setDisable(true);
 		rateField.setDisable(true);
+		rateLabel.setDisable(true);
+		salaryField.setDisable(false);
+		salaryLabel.setDisable(false);
 		managerSelect.setDisable(false);
 		departmentHeadSelect.setDisable(false);
 		directorSelect.setDisable(false);
-		salaryField.setDisable(false);
 		setHoursBTN.setDisable(true);
-		hoursLabel.setDisable(false);
-		rateLabel.setDisable(false);
-		salaryLabel.setDisable(true);
 	}
 
 	@FXML
 	void selectPartRB(ActionEvent event) {
 		hoursField.setDisable(false);
+		hoursLabel.setDisable(false);
 		rateField.setDisable(false);
+		rateLabel.setDisable(false);
+		salaryField.setDisable(true);
+		salaryLabel.setDisable(true);
 		managerSelect.setDisable(true);
 		departmentHeadSelect.setDisable(true);
 		directorSelect.setDisable(true);
-		salaryField.setDisable(true);
 		setHoursBTN.setDisable(false);
-		hoursLabel.setDisable(false);
-		rateLabel.setDisable(false);
-		salaryLabel.setDisable(true);
 	}
 }
