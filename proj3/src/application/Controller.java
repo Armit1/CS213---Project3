@@ -178,7 +178,7 @@ public class Controller {
 	@FXML
 	void clearFields(ActionEvent event) {
 		nameField.clear();
-		datePicker.getEditor().clear();
+		datePicker.setValue(null);
 		salaryField.clear();
 		rateField.clear();
 		hoursField.clear();
@@ -248,6 +248,9 @@ public class Controller {
 			in.close();
 		} catch (NullPointerException e) {
 			return;
+		} catch (ArrayIndexOutOfBoundsException e) {
+			consoleOutputArea.appendText("Error with file contents for importing database.\n");
+			return;
 		}
 		consoleOutputArea.appendText("Database imported.\n");
 	}
@@ -314,8 +317,7 @@ public class Controller {
 	@FXML
 	void setHours(ActionEvent event) {
 		final int MIN_HOURS = 0, MAX_HOURS = 100;
-		String name = nameField.getText();
-		if (name.isEmpty()) {
+		if (nameField.getText().isEmpty()) {
 			consoleOutputArea.appendText("Please enter a name.\n");
 			return;
 		}
@@ -331,11 +333,6 @@ public class Controller {
 				consoleOutputArea.appendText("Please select a valid date.\n");
 				return;
 			}
-		} catch (java.lang.NullPointerException e) {
-			consoleOutputArea.appendText("Please select a date.\n");
-			return;
-		}
-		try {
 			int hours = Integer.parseInt(hoursField.getText());
 			if (hours < MIN_HOURS) {
 				consoleOutputArea.appendText("Hours cannot be negative.\n");
@@ -345,12 +342,14 @@ public class Controller {
 				consoleOutputArea.appendText("Invalid Hours: over 100.\n");
 				return;
 			}
-			if (!company.setHours(new Parttime(name, department, dateHired, hours))) {
+			if (!company.setHours(new Parttime(nameField.getText(), department, dateHired, hours))) {
 				consoleOutputArea.appendText("Employee does not exist.\n");
 				return;
 			}
 			consoleOutputArea.appendText("Working hours set.\n");
-
+		} catch (java.lang.NullPointerException e) {
+			consoleOutputArea.appendText("Please select a date.\n");
+			return;
 		} catch (NumberFormatException e) {
 			consoleOutputArea.appendText("Please enter valid hours.\n");
 		}
