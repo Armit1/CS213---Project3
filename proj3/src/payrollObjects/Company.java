@@ -221,10 +221,6 @@ public class Company {
     public void exportDatabase(File targetFile) throws NullPointerException {
 		try {
 			PrintWriter pw = new PrintWriter(targetFile);
-			if (this.isEmpty()) {
-				pw.close();
-				return;
-			}
 			pw.print(getList());
 			pw.close();
 		} catch (FileNotFoundException e) {

@@ -188,6 +188,10 @@ public class Controller {
 
 	@FXML
 	void exportFile(ActionEvent event) {
+		if (company.isEmpty()) {
+			consoleOutputArea.appendText("No data exists in current database to export.\n");
+			return;
+		}
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Open Target File for the Export");
 		chooser.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.txt"),
