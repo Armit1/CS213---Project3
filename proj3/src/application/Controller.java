@@ -25,33 +25,25 @@ public class Controller {
 	@FXML
 	private TextField nameField;
 	@FXML
-	private DatePicker datePicker;
-	@FXML
-	private ToggleGroup empTypeGroup;
-	@FXML
-	private ToggleGroup departmentGroup;
-	@FXML
 	private TextField salaryField;
 	@FXML
 	private TextField rateField;
 	@FXML
 	private TextField hoursField;
 	@FXML
-	private RadioButton managerSelect;
+	private DatePicker datePicker;
+	@FXML
+	private ToggleGroup empTypeGroup;
+	@FXML
+	private ToggleGroup departmentGroup;
 	@FXML
 	private ToggleGroup manageGroup;
+	@FXML
+	private RadioButton managerSelect;
 	@FXML
 	private RadioButton departmentHeadSelect;
 	@FXML
 	private RadioButton directorSelect;
-	@FXML
-	private Button printByDept;
-	@FXML
-	private Button printByDate;
-	@FXML
-	private Button printEarnings;
-	@FXML
-	private Button updateAction;
 	@FXML
 	private Button setHoursBTN;
 	@FXML
