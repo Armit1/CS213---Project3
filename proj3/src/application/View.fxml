@@ -189,7 +189,7 @@
    <bottom>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <TextArea fx:id="consoleOutputArea" editable="false" prefHeight="200.0" prefWidth="200.0" />
+            <TextArea fx:id="textArea" editable="false" prefHeight="200.0" prefWidth="200.0" />
          </children>
       </VBox>
    </bottom>

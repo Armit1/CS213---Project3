@@ -14,7 +14,7 @@ public class Profile {
     Creates an instance of Profile. Profiles consist of a name, department title,
     and the date an employee was hired. 
     
-    @param name       name of the employee
+    @param name name of the employee
     @param department department the employee belongs to
     @param dateHired  the date the employee was hired
     */

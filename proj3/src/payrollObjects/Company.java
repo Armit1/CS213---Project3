@@ -122,7 +122,7 @@ public class Company {
     }
 
     /**
-    Proccess the payments for all employees in the company. 
+    Process the payments for all employees in the company. 
     */
     public void processPayments() {
         for (int i = 0; i < numEmployee; i++)
@@ -130,10 +130,11 @@ public class Company {
     }
 
 	/**
-	 * Prints the original list of employees in the company. If there are no
-	 * employees present in the list it will output a warning.
-	 * @return List earnings statements as String
-	 */
+	Prints the original list of employees in the company. If there are no
+	employees present in the list it will output a warning.
+	
+	@return List of earnings statements as String
+	*/
 	public String print() { // print earning statements for all employees
 		if (numEmployee == 0) {
 			return null;
@@ -142,12 +143,13 @@ public class Company {
 	}
 
 	/**
-	 * Sorts the list of employees present in the company by department in ascending
-	 * order and prints the list of employees and their attributes in ascending
-	 * order to the console. The list is sorted in-memory. If there are no employees
-	 * present in the list it will not sort and instead it will output a warning.
-	 * @return Earnings statements sorted by department as String.
-	 */
+	Sorts the list of employees present in the company by department in ascending
+	order and prints the list of employees and their attributes in ascending
+	order to the console. The list is sorted in-memory. If there are no employees
+	present in the list it will not sort and instead it will output a warning.
+	
+	@return Earnings statements sorted by department as String.
+	*/
 	public String printByDepartment() { // print earning statements by department
 		if (numEmployee == 0) {
 			return null;
@@ -169,13 +171,14 @@ public class Company {
 	}
 
 	/**
-	 * Sorts the list of employees present in the company by date published in
-	 * ascending order and prints the list of employees and their attributes in
-	 * ascending order to the console. The list is sorted in-memory. If there are no
-	 * employees present in the list it will not sort and instead it will output a
-	 * warning.
-	 * @return String of earnings statements sorted by date hired.
-	 */
+	Sorts the list of employees present in the company by date published in
+	ascending order and prints the list of employees and their attributes in
+	ascending order to the console. The list is sorted in-memory. If there are no
+	employees present in the list it will not sort and instead it will output a
+	warning.
+	
+	@return String of earnings statements sorted by date hired.
+	*/
 	public String printByDate() { // print earning statements by date hired
 		if (numEmployee == 0) {
 			return null;
@@ -199,10 +202,11 @@ public class Company {
 	}
 
 	/**
-	 * Helper function that prints the current list of company employees that are
-	 * stored in-memory of the Company object.
-	 * @return List of employees as String.
-	 */
+	Helper function that prints the current list of company employees that are
+	stored in-memory of the Company object.
+	
+	@return List of employees as String.
+	*/
 	private String getList() {
 		String ret = "";
 		for (int i = 0; i < numEmployee; i++)
@@ -211,9 +215,10 @@ public class Company {
 	}
     
     /**
-    *Checks if the company currently holds any employees. 
-    *@return true if the company does not hold any employees, false 
-    *if the company does hold employees
+    Checks if the company currently holds any employees. 
+    
+    @return true if the company does not hold any employees, false 
+    if the company does hold employees
     */
     public boolean isEmpty() {
         if (numEmployee == 0) 
@@ -222,9 +227,11 @@ public class Company {
     }
     
     /**
-     @param targetFile to be exported
-	 * Opens file with PrintWriter and exports to Controller
-	 */
+    Opens file with PrintWriter and exports to Controller. Throws 
+    null pointer exception to handle case while process is interrupted.
+    
+    @param targetFile to be exported
+	*/
     public void exportDatabase(File targetFile) throws NullPointerException {
 		try {
 			PrintWriter pw = new PrintWriter(targetFile);
