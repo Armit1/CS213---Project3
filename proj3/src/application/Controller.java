@@ -213,7 +213,7 @@ public class Controller {
 	Checks if the company database is empty, otherwise processes payments and
 	outputs a message to the text area displaying attempt result.
 	  
-	@param event
+	@param event action that fired this event
 	*/
 	@FXML
 	private void computePayments(ActionEvent event) {
