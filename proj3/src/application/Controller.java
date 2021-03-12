@@ -18,6 +18,12 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import payrollObjects.*;
 
+
+/**
+*Stores information entered by user from GUI and processes Events. This class is responsible for implementing the functionality
+*of the GUI and responding to events. Buttons and text fields are updated dynamically based on user selections.
+@author Matthew Brandao, Armit Patel
+*/
 public class Controller {
 
 	@FXML
@@ -55,6 +61,10 @@ public class Controller {
 
 	private static Company company = new Company();
 
+	/**
+	  *Function that confirms all entries for adding an employee are Valid.
+	  *Passes valid entries to employeeHelper.
+	    */
 	@FXML
 	void addEmployee(ActionEvent event) {
 		String name = nameField.getText();
@@ -83,6 +93,9 @@ public class Controller {
 		employeeHelper(name, department, dateHired, employeeType);
 	}
 
+	/**
+	  *Helper function that formats all entries of GUI and adds employee to database.
+	    */
 	private void employeeHelper(String name, String department, Date dateHired, String employeeType) {
 		switch (employeeType) {
 		case "Full Time":
@@ -167,6 +180,9 @@ public class Controller {
 		consoleOutputArea.appendText("Employee added.\n");
 	}
 
+	/**
+	  *Clears all fields of GUI.
+	    */
 	@FXML
 	void clearFields(ActionEvent event) {
 		nameField.clear();
@@ -176,6 +192,9 @@ public class Controller {
 		hoursField.clear();
 	}
 
+	/**
+	  *Checks if company database is empty, otherwise processes payments and outputs to console area.
+	    */
 	@FXML
 	void computePayments(ActionEvent event) {
 		if (company.isEmpty())
@@ -186,6 +205,9 @@ public class Controller {
 		}
 	}
 
+	/**
+	  *Helper function that exports file when export option is clicked.
+	    */
 	@FXML
 	void exportFile(ActionEvent event) {
 		if (company.isEmpty()) {
@@ -206,7 +228,10 @@ public class Controller {
 			return;
 		}
 	}
-
+	
+	/**
+	  *Helper function that imports file when import option is clicked.
+	    */
 	@FXML
 	void importFile(ActionEvent event) throws FileNotFoundException {
 		FileChooser chooser = new FileChooser();
@@ -250,7 +275,9 @@ public class Controller {
 		}
 		consoleOutputArea.appendText("Database imported.\n");
 	}
-
+	/**
+	  *Checks if employee database is empty, otherwise prints earnings statements sorted by Date to consoleOutputArea
+	    */
 	@FXML
 	void printByDate(ActionEvent event) {
 		String displayDB = company.printByDate();
@@ -261,6 +288,9 @@ public class Controller {
 		consoleOutputArea.appendText("--Printing by date--\n" + displayDB);
 	}
 
+	/**
+	  *Checks if employee database is empty, otherwise prints earnings statements sorted by Department to consoleOutputArea
+	    */
 	@FXML
 	void printByDepartment(ActionEvent event) {
 		String displayDB = company.printByDepartment();
@@ -271,6 +301,9 @@ public class Controller {
 		consoleOutputArea.appendText("--Printing by department--\n" + displayDB);
 	}
 
+	/**
+	  *Checks if employee database is empty, otherwise prints earnings statements to consoleOutputArea.
+	    */
 	@FXML
 	void printEmployees(ActionEvent event) {
 		String displayDB = company.print();
@@ -281,6 +314,9 @@ public class Controller {
 		consoleOutputArea.appendText("--Printing all employees--\n" + displayDB);
 	}
 
+	/**
+	  *Formats input from GUI form and removes employee.
+	    */
 	@FXML
 	void removeEmployee(ActionEvent event) {
 		String name = nameField.getText();
@@ -310,6 +346,9 @@ public class Controller {
 			consoleOutputArea.appendText("Employee could not be found.\n");
 	}
 
+	/**
+	  *Formats input from GUI form and sets hours for Parttime employee.
+	    */
 	@FXML
 	void setHours(ActionEvent event) {
 		final int MIN_HOURS = 0, MAX_HOURS = 100;
@@ -351,6 +390,9 @@ public class Controller {
 		}
 	}
 
+	/**
+	  *Updates GUI form when FullTime employee is selected.
+	    */
 	@FXML
 	void selectFullRB(ActionEvent event) {
 		hoursField.setDisable(true);
@@ -365,6 +407,9 @@ public class Controller {
 		setHoursBTN.setDisable(true);
 	}
 
+	/**
+	  *Updates GUI form when Management employee is selected.
+	    */
 	@FXML
 	void selectManageRB(ActionEvent event) {
 		hoursField.setDisable(true);
@@ -379,6 +424,9 @@ public class Controller {
 		setHoursBTN.setDisable(true);
 	}
 
+	/**
+	  *Updates GUI form when PartTime employee is selected.
+	    */
 	@FXML
 	void selectPartRB(ActionEvent event) {
 		hoursField.setDisable(false);

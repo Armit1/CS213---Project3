@@ -51,7 +51,7 @@ public class Date implements Comparable<Date>{
     Compares an instance of Date to a relative instance of Date that is provided as parameter. 
     Determines whether this date is earlier, the same, or greater than the relative date.
       
-    @param relativeDate the date this instance of Date will be compare to.
+    @param date the date this instance of Date will be compare to.
     @return -1 if this date is earlier than the relative date, 0 if this date is
     the same as the relative date, 1 if this date is newer than the relative date
     */
@@ -202,7 +202,6 @@ public class Date implements Comparable<Date>{
     /**
     The testbed main to thoroughly test the isValid() method with created test
     cases.
-      
     @param args
     */
     public static void main(String[] args) {

@@ -83,26 +83,23 @@ public class Parttime extends Employee {
 
     /**
     Get the hours the part time employee has worked.
-    
-    @return the hours worked
+    *@return the hours worked
     */
     public int getHoursWorked() {
         return hoursWorked;
     }
     
     /**
-    Get the hourly rate the part time employee gets paid.
-    
-    @return the hourly rate
+    *Get the hourly rate the part time employee gets paid.
+    *@return the hourly rate
     */
     public double getHourlyRate() {
         return hourlyRate;
     }
 
     /**
-    Sets the hours the part time employee has worked.
-    
-    @param hours the hours worked to set
+    *Sets the hours the part time employee has worked.
+    *@param hoursWorked the hours worked to set
     */
     public void setHoursWorked(int hoursWorked) {
         this.hoursWorked = hoursWorked;
