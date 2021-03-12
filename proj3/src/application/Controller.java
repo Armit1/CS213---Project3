@@ -71,7 +71,7 @@ public class Controller {
 	Function that confirms all entries for adding an employee are Valid. Passes
 	valid entries to employeeHelper.
 	  
-	@param event
+	@param event action that fired this event
 	*/
 	@FXML
 	private void addEmployee(ActionEvent event) {
@@ -198,7 +198,7 @@ public class Controller {
 	/**
 	Clears all fields of the GUI. Radio buttons are not effected.
 	  
-	@param event
+	@param event action that fired this event
 	*/
 	@FXML
 	private void clearFields(ActionEvent event) {
@@ -230,7 +230,7 @@ public class Controller {
 	local machine. The only format allowed for export is the *.txt extension. The
 	function will not allow users to export databases that are empty.
 	  
-	@param event
+	@param event action that fired this event
 	*/
 	@FXML
 	private void exportFile(ActionEvent event) {
@@ -260,7 +260,7 @@ public class Controller {
 	from the text file are appended to the current database. This function also
 	handles cases where the contents of the import file are invalid.
 	  
-	@param event
+	@param event action that fired this event
 	@throws FileNotFoundException
 	*/
 	@FXML
@@ -314,7 +314,7 @@ public class Controller {
 	Checks if employee database is empty, otherwise prints earnings statements
 	sorted by Date in ascending order to the text area of the GUI.
 	  
-	@param event
+	@param event action that fired this event
 	*/
 	@FXML
 	private void printByDate(ActionEvent event) {
@@ -330,7 +330,7 @@ public class Controller {
 	Checks if employee database is empty, otherwise prints earnings statements
 	sorted by Department to the text area of the GUI.
 	  
-	@param event
+	@param event action that fired this event
 	*/
 	@FXML
 	private void printByDepartment(ActionEvent event) {
@@ -346,7 +346,7 @@ public class Controller {
 	Checks if employee database is empty, otherwise prints earnings statements of
 	the current state of the database to the text area of the GUI.
 	  
-	@param event
+	@param event action that fired this event
 	*/
 	@FXML
 	private void printEmployees(ActionEvent event) {
@@ -363,7 +363,7 @@ public class Controller {
 	Performs error handling to make sure the user is attempting to remove an
 	employee in situations where such an action is allowed.
 	  
-	@param event
+	@param event action that fired this event
 	*/
 	@FXML
 	private void removeEmployee(ActionEvent event) {
@@ -399,7 +399,7 @@ public class Controller {
 	error handling to make sure the user is attempting to set the hours in
 	situations where such an action is allowed.
 	  
-	 @param event 
+	 @param event action that fired this event
 	*/
 	@FXML
 	private void setHours(ActionEvent event) {
@@ -445,7 +445,7 @@ public class Controller {
 	/**
 	Updates GUI form when FullTime employee is selected.
 	  
-	@param event
+	@param event action that fired this event
 	*/
 	@FXML
 	private void selectFullRB(ActionEvent event) {
@@ -464,7 +464,7 @@ public class Controller {
 	/**
 	Updates GUI form when Management employee is selected.
 	  
-	@param event
+	@param event action that fired this event
 	*/
 	@FXML
 	private void selectManageRB(ActionEvent event) {
@@ -483,7 +483,7 @@ public class Controller {
 	/**
 	Updates GUI form when PartTime employee is selected.
 	  
-	@param event
+	@param event action that fired this event
 	*/
 	@FXML
 	private void selectPartRB(ActionEvent event) {
